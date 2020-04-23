@@ -6,5 +6,5 @@ MANIFEST_PATH=$JULIA_DIR/RequestedManifest.toml
 
 for pkg in $PKGS_PATH/*
 do
-  julia --project=$LOCAL_REG_TOOLS -- $LOCAL_REG_TOOLS/src/register_pkgs.jl "$pkg" "$REG_PATH" "$MANIFEST_PATH"
+  julia --project=$LOCAL_REG_TOOLS -- $LOCAL_REG_TOOLS/src/register_pkg.jl "$pkg" "$REG_PATH" "$MANIFEST_PATH"
 done
