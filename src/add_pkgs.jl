@@ -24,10 +24,12 @@ open(in_file) do pkgs
   end
 end
 
-DelimitedFiles.writedlm("$root/out/add_pkgs_deps.txt", dep_set)
-DelimitedFiles.writedlm("$root/out/add_pkgs_errors.txt", failed_pkgs, "\t\t\t\t\t=>\t")
-
 @info "Packages added:" dep_set
-@error "Failed to add packages:" failed_pkgs
+DelimitedFiles.writedlm("$root/out/add_pkgs_deps.txt", dep_set)
+
+if !isempty(failed_pkgs)
+  @error "Failed to add packages:" failed_pkgs
+  DelimitedFiles.writedlm("$root/out/add_pkgs_errors.txt", failed_pkgs, "\t=>\t")
+end
 
 Pkg.precompile()

@@ -43,8 +43,10 @@ end
 
 Pkg.Registry.rm("General")
 
-DelimitedFiles.writedlm("$root/out/get_pkgs_deps.txt", dep_set)
-DelimitedFiles.writedlm("$root/out/get_pkgs_errors.txt", failed_pkgs, "\t=>\t")
-
 @info "Packages cloned:" dep_set
-@error "Failed to add packages:" failed_pkgs
+DelimitedFiles.writedlm("$root/out/get_pkgs_deps.txt", dep_set)
+
+if !isempty(failed_pkgs)
+  @error "Failed to add packages:" failed_pkgs
+  DelimitedFiles.writedlm("$root/out/get_pkgs_errors.txt", failed_pkgs, "\t=>\t")
+end
