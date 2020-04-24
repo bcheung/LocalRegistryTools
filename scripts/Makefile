@@ -26,6 +26,9 @@ register:
 
 build: extract init_git create_local_registry register
 
+clone_local_registry:
+	$(SCRIPTS)/clone_local_registry.sh $(JULIA_DIR) CentralDepot/dev Local
+
 clean:
 	rm -rf $(PKGS)
 	rm -rf $(LOCAL_REG)
