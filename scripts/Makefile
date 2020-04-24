@@ -12,7 +12,7 @@ install:
 extract:
 	$(SCRIPTS)/extract_pkgs.sh $(JULIA_DIR)
 
-clone:
+clone_repos:
 	$(SCRIPTS)/clone_repos.sh $(JULIA_DIR)
 
 init_git:
