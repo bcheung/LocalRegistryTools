@@ -47,6 +47,7 @@ Pkg.Registry.rm("General")
 DelimitedFiles.writedlm("$root/out/get_pkgs_deps.txt", dep_set)
 
 if !isempty(failed_pkgs)
+  # stdlib packages fail because they are not in the registry
   @error "Failed to add packages:" failed_pkgs
   DelimitedFiles.writedlm("$root/out/get_pkgs_errors.txt", failed_pkgs, "\t=>\t")
 end
