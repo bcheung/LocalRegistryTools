@@ -1,5 +1,5 @@
 JULIA_DIR=$1
-DEPOT_DEV_DIR=$JULIA_DIR/$2
+DEPOT_DEV_DIR=$2
 LOCAL_REG_NAME=$3
 LOCAL_REG=$JULIA_DIR/Registries/$LOCAL_REG_NAME
 
@@ -28,7 +28,9 @@ for pkg_path in $DEPOT_DEV_DIR/*
 do
   pkg=$(awk -F'/' '{print $(NF)}'<<<"$pkg_path")
   reg_pkg_path=$(echo $pkg | cut -c1 | tr [a-z] [A-Z])/$pkg
-  grep -v "repo = " $LOCAL_REG/$reg_pkg_path/Package.toml > $LOCAL_REG/$reg_pkg_path/Package2.toml; mv $LOCAL_REG/$reg_pkg_path/Package2.toml $LOCAL_REG/$reg_pkg_path/Package.toml
+  grep -v "repo = " $LOCAL_REG/$reg_pkg_path/Package.toml > $LOCAL_REG/$reg_pkg_path/Package2.toml
+  rm $LOCAL_REG/$reg_pkg_path/Package.toml
+  mv $LOCAL_REG/$reg_pkg_path/Package2.toml $LOCAL_REG/$reg_pkg_path/Package.toml
   echo "repo = \"$pkg_path/.git\"" >> $LOCAL_REG/$reg_pkg_path/Package.toml
   # populate registry package uuid keys of only the packages modified
   # uuid=$(tr -d '"' <<< $(awk -F' = ' '{print $2}'<<<"$(grep "uuid = " $LOCAL_REG/$reg_pkg_path/Package.toml)"))
