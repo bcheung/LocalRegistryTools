@@ -1,36 +1,25 @@
 JULIA_DIR=/Users/bcheung/Documents/SoftwareProjects/julia
 LOCAL_REG_TOOLS=/Users/bcheung/Documents/SoftwareProjects/julia/LocalRegistryTools
 SCRIPTS=$(LOCAL_REG_TOOLS)/scripts
-PKGS=$(JULIA_DIR)/Packages
-LOCAL_REG=$(JULIA_DIR)/Registries/Local
+PKG_DIR=$(JULIA_CENTRAL_DEPOT)/dev
+LOCAL_REG_NAME=Local
+LOCAL_REG=$(JULIA_DIR)/Registries/$(LOCAL_REG_NAME)
 
-all: install extract init_git create_local_registry register
+all: get_pkgs build_local_registry
 
-install:
-	$(SCRIPTS)/install_pkgs.sh $(JULIA_DIR)
+get_pkgs:
+	julia $(LOCAL_REG_TOOLS)/src/get_pkgs.jl $(LOCAL_REG_TOOLS)
 
-extract:
-	$(SCRIPTS)/extract_pkgs.sh $(JULIA_DIR)
+build_local_registry:
+	$(SCRIPTS)/build_local_registry.sh $(JULIA_DIR) $(PKG_DIR) $(LOCAL_REG_NAME)
 
-clone_repos:
-	$(SCRIPTS)/clone_repos.sh $(JULIA_DIR)
+add_pkgs:
+	julia $(LOCAL_REG_TOOLS)/src/add_pkgs.jl $(LOCAL_REG_TOOLS) $(LOCAL_REG)
 
-init_git:
-	$(SCRIPTS)/init_git.sh $(JULIA_DIR)
-
-create_local_registry:
-	$(SCRIPTS)/create_local_registry.sh $(JULIA_DIR) $(LOCAL_REG_TOOLS)
-
-register:
-	$(SCRIPTS)/register_pkgs.sh $(JULIA_DIR) $(LOCAL_REG_TOOLS)
-
-build: extract init_git create_local_registry register
-
-clone_local_registry:
-	$(SCRIPTS)/clone_local_registry.sh $(JULIA_DIR) CentralDepot/dev Local
+build: build_local_registry add_pkgs
 
 clean:
-	rm -rf $(PKGS)
+	rm -rf $(JULIA_CENTRAL_DEPOT)/*
 	rm -rf $(LOCAL_REG)
 
-.PHONY: build clean install extract init_git create_local_registry register all
+.PHONY: build clean get_pkgs build_local_registry all
