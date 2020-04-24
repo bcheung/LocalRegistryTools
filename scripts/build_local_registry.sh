@@ -1,6 +1,7 @@
 JULIA_DIR=$1
 DEPOT_DEV_DIR=$JULIA_DIR/$2
-LOCAL_REG=$JULIA_DIR/Registries/$3
+LOCAL_REG_NAME=$3
+LOCAL_REG=$JULIA_DIR/Registries/$LOCAL_REG_NAME
 
 if [ ! -d $LOCAL_REG ]
 then
@@ -10,7 +11,7 @@ then
 
   # manually create Registry.toml
   # write registry information
-  echo "name = \"Local\"" >> $LOCAL_REG/Registry2.toml
+  echo "name = \"$LOCAL_REG_NAME\"" >> $LOCAL_REG/Registry2.toml
   echo "uuid = \"$(julia -e 'import UUIDs; println(UUIDs.uuid4())')\"" >> $LOCAL_REG/Registry2.toml
   echo "repo = \"$LOCAL_REG\"" >> $LOCAL_REG/Registry2.toml
   echo "description = \"This is a local registry\"" >> $LOCAL_REG/Registry2.toml
@@ -29,7 +30,7 @@ do
   reg_pkg_path=$(echo $pkg | cut -c1 | tr [a-z] [A-Z])/$pkg
   grep -v "repo = " $LOCAL_REG/$reg_pkg_path/Package.toml > $LOCAL_REG/$reg_pkg_path/Package2.toml; mv $LOCAL_REG/$reg_pkg_path/Package2.toml $LOCAL_REG/$reg_pkg_path/Package.toml
   echo "repo = \"$pkg_path/.git\"" >> $LOCAL_REG/$reg_pkg_path/Package.toml
-  # populate registry package uuid keys manually
+  # populate registry package uuid keys of only the packages modified
   # uuid=$(tr -d '"' <<< $(awk -F' = ' '{print $2}'<<<"$(grep "uuid = " $LOCAL_REG/$reg_pkg_path/Package.toml)"))
   # echo "$uuid = { name = \"$pkg\", path = \"$reg_pkg_path\" }" >> $LOCAL_REG/Registry.toml
 done
